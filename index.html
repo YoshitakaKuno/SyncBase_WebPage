@@ -8,7 +8,7 @@
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png">
     
-    <meta name="description" content="FAX・LINE注文の入力作業をゼロに。美容ディーラー・建材卸向けAI自動化システム。">
+    <meta name="description" content="FAX・LINE注文の入力作業をゼロに。建材卸・資材商社の管理部責任者・バックオフィス統括向けAI自動化システム。">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -21,15 +21,39 @@
                     },
                     colors: {
                         brand: {
-                            main: '#0F766E', /* 信頼のティールグリーン */
+                            main: '#0F766E',
                             dark: '#134E4A',
                             light: '#F0FDFA',
-                            accent: '#F59E0B', /* コンバージョンのオレンジ */
+                            accent: '#F59E0B',
                         }
                     }
                 }
             }
         }
+
+    (function () {
+        const ids = ["btnTimerex", "btnTimerexHero"]; // 予約ボタンのIDを列挙
+        const srcParams = new URLSearchParams(window.location.search);
+
+        const allowKeys = [
+        "cid", "v",
+        "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"
+        ];
+
+        ids.forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+
+        const destUrl = new URL(btn.href);
+        allowKeys.forEach((k) => {
+            const val = srcParams.get(k);
+            if (val) destUrl.searchParams.set(k, val);
+        });
+
+        btn.href = destUrl.toString();
+        });
+    })();
+
     </script>
 </head>
 <body class="bg-white text-gray-800 antialiased">
@@ -45,28 +69,39 @@
                 <a href="#solution" class="hover:text-brand-main transition">機能</a>
                 <a href="#price" class="hover:text-brand-main transition">価格</a>
             </nav>
-            <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank" class="bg-brand-main text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md">
+            <a id="btnTimerex"
+                href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+                target="_blank"
+                class="bg-brand-main text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md">
                 無料デモ予約
-            </a>
+             </a>
         </div>
     </header>
 
     <section class="pt-32 pb-20 bg-gradient-to-br from-brand-light to-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
             <span class="inline-block py-1 px-3 rounded-full bg-brand-100 text-brand-dark text-xs font-bold mb-6 border border-brand-200">
-                営業所長・事務責任者の皆様へ
+                建材卸・資材商社の 管理部責任者・バックオフィス統括の皆様へ
             </span>
+
             <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
-                「せっかく教えたのに、<br>また辞めるの？」
+                「採用しても、育てても、また辞める──」
             </h1>
+
             <p class="text-lg text-gray-600 mb-10 leading-relaxed font-bold">
-                3ヶ月で辞める事務員の「教育コスト」に疲弊していませんか？<br>
-                その入力業務、AIなら文句ひとつ言わず即日終わらせます。
+                FAX注文・手書き伝票の入力業務に<br>
+                人を割き続ける体制から抜け出しませんか？<br>
+                現場依存の入力作業を、AIが「標準化・自動化」します。
             </p>
+
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank" class="bg-brand-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-2 transform hover:-translate-y-1">
-                    <i class="fa-regular fa-calendar-check"></i> 無料デモを予約する
+                <a id="btnTimerexHero"
+                href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+                target="_blank"
+                class="bg-brand-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-2 transform hover:-translate-y-1">
+                <i class="fa-regular fa-calendar-check"></i> 無料デモを予約する
                 </a>
+
                 <a href="#demo" class="bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-play"></i> 30秒動画を見る
                 </a>
@@ -78,33 +113,41 @@
         <div class="max-w-5xl mx-auto px-6">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    問題は「人が来ない」ことではありません。<br>
-                    <span class="text-red-600">教えるたびに現場が疲弊し続ける構造です。</span>
+                    課題は「採用」ではありません。<br>
+                    <span class="text-red-600">教育と属人化が永続する業務構造です。</span>
                 </h2>
             </div>
             
             <div class="flex flex-col gap-12 items-center">
                 <div class="w-full max-w-3xl bg-gray-50 p-8 rounded-2xl border border-gray-200">
-                    <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-2 text-center md:text-left">終わらない「教育」のループ</h3>
+                    <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-2 text-center md:text-left">バックオフィスが疲弊する要因</h3>
                     <ul class="space-y-4 text-gray-600">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1 flex-shrink-0"></i>
-                            <span>「この得意先のFAXはここを見る」<br><span class="text-sm text-gray-400">マニュアル化できない暗黙知が多すぎる。</span></span>
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span>取引先ごとに異なるFAX注文書の読み替え作業</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1 flex-shrink-0"></i>
-                            <span>「この商品はウチ独自の呼び方だから」<br><span class="text-sm text-gray-400">ベテラン社員の時間が教育に溶けていく。</span></span>
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span>商品名・型番・社内呼称が混在し、教育コストが膨張</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-user-xmark text-red-500 mt-1 flex-shrink-0"></i>
-                            <span>そして、覚えた頃に「辞めます」<br><span class="text-sm text-gray-400">また最初から採用と教育のやり直し。</span></span>
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span>覚えた頃に退職 → 採用・教育のやり直し</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                            <span>月末だけ伝票が山積み、残業が常態化</span>
                         </li>
                     </ul>
+                    <p class="mt-6 text-gray-700 font-bold text-center">
+                        「人を補充する」ではなく<br>
+                        <span class="text-brand-main underline">入力作業そのものをなくす</span>という解決へ。
+                    </p>
                 </div>
 
                 <div id="demo" class="relative w-full shadow-2xl rounded-2xl">
-                    <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-brand-main text-white px-6 py-2 rounded-t-lg font-bold text-base shadow-md w-max z-10">
-                        論より証拠。AIは一瞬で終わらせます。
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-main text-white px-6 py-2 rounded-t-lg font-bold text-base shadow-md w-max z-10">
+                        入力作業は、ここまで自動化できます。
                     </div>
                     <div class="aspect-video rounded-2xl overflow-hidden border-4 border-gray-800 bg-black w-full">
                         <iframe 
@@ -126,10 +169,10 @@
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    Sync Baseが、<br>
-                    <span class="text-brand-main">その“負の連鎖”を断ち切ります。</span>
+                    Sync Baseが、バックオフィス業務を<br>
+                    <span class="text-brand-main">“標準化”と“自動化”へ移行させます。</span>
                 </h2>
-                <p class="text-gray-600">新人が辞めても回る業務構造を作るための、AIソリューション。</p>
+                <p class="text-gray-600">新人が入れ替わっても、同じ品質で回る体制を構築します。</p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
@@ -137,33 +180,31 @@
                     <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
                         <i class="fa-solid fa-robot"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">入力はAIが自動処理</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">手書きFAXもLINE画像も、AIが瞬時にデータ化。人間がキーボードを叩く時間はゼロになります。</p>
+                    <h3 class="text-xl font-bold mb-3">FAX・画像を自動データ化</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">手書き注文書・PDF・写真・LINEスクショまで対象。AIが瞬時に構造化します。</p>
                 </div>
                 <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
                     <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
                         <i class="fa-solid fa-eye"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">人は「確認」だけ</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">AIの結果を見て、OKボタンを押すだけ。教育が必要なのは「最終確認」のやり方のみです。</p>
+                    <p class="text-gray-600 text-sm leading-relaxed">入力作業から解放され、作業は最終チェックのみ。教育範囲が極小化されます。</p>
                 </div>
                 <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
                     <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
                         <i class="fa-solid fa-shield-heart"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">辞められる不安ゼロ</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">AIは辞めません。文句も言いません。24時間365日、あなたの横で即戦力として働き続けます。</p>
+                    <h3 class="text-xl font-bold mb-3">属人業務をゼロへ</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">知識が個人に閉じず、業務が標準化。退職・異動の影響を受けない体制に。</p>
                 </div>
             </div>
 
             <div class="mt-12 max-w-3xl mx-auto bg-white border border-brand-200 p-6 rounded-xl flex items-start gap-4 shadow-sm">
                 <i class="fa-solid fa-circle-info text-brand-main text-xl mt-1"></i>
                 <div>
-                    <h4 class="font-bold text-brand-dark mb-1">安心の「ワンクリック修正」機能</h4>
+                    <h4 class="font-bold text-brand-dark mb-1">安心の「自信度アラート＋ワンクリック修正」</h4>
                     <p class="text-sm text-gray-600">
-                        AIも、癖の強い手書き文字は迷うことがあります。その場合、AIは「自信がない」とアラートを出します。
-                        人間はそれを見て、<span class="font-bold underline text-brand-main">ワンクリックで修正するだけ。</span>
-                        「AI任せでミスが起きる」という不安をゼロにする設計です。
+                        AIが迷った箇所は「要確認」と表示。入力責任は人が保持しつつ、作業だけを自動化します。
                     </p>
                 </div>
             </div>
@@ -172,16 +213,15 @@
 
     <section id="price" class="py-20 bg-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-12">コストと精神的負担の比較</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-12">コストと運用負荷の比較</h2>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="p-8 border border-gray-200 rounded-2xl bg-gray-50">
-                    <p class="text-gray-500 font-bold mb-2">事務員採用の場合</p>
+                    <p class="text-gray-500 font-bold mb-2">人材採用＋教育で運用する場合</p>
                     <p class="text-3xl font-bold text-gray-400 mb-6">¥350<span class="text-base">万 / 年</span></p>
                     <ul class="text-left text-sm text-gray-500 space-y-3 pl-4 list-disc">
-                        <li>教育に<span class="font-bold">半年</span>かかる</li>
-                        <li>また<span class="font-bold">辞める</span>リスクがある</li>
-                        <li>退職のたびに<span class="font-bold">現場の空気が重くなる</span></li>
-                        <li>所長が<span class="font-bold">気を使う側</span>に回る</li>
+                        <li>教育に半年以上</li>
+                        <li>定着リスク・再採用コスト</li>
+                        <li>属人化が残り、引き継ぎ困難</li>
                     </ul>
                 </div>
                 <div class="p-8 border-4 border-brand-main rounded-2xl bg-white relative overflow-hidden shadow-xl transform scale-105">
@@ -190,9 +230,9 @@
                     <p class="text-4xl font-black text-gray-900 mb-6">¥60<span class="text-lg font-medium text-gray-600">万 / 年</span></p>
                     <p class="text-sm font-bold text-gray-600 mb-4">（月額5万円 × 12ヶ月）</p>
                     <ul class="text-left text-sm text-gray-800 space-y-3 pl-4 list-disc font-medium">
-                        <li><span class="text-brand-main font-bold">即日稼働</span>・教育不要</li>
-                        <li><span class="text-brand-main font-bold">24時間</span>文句を言わず働く</li>
-                        <li><span class="text-brand-main font-bold">辞めない</span>（永続稼働）</li>
+                        <li>即日稼働・教育ほぼ不要</li>
+                        <li>標準化された業務フロー</li>
+                        <li>人に依存しない運用体制</li>
                     </ul>
                 </div>
             </div>
@@ -201,21 +241,21 @@
 
     <section class="py-16 bg-gray-100 border-y border-gray-200">
         <div class="max-w-3xl mx-auto px-6 text-center">
-            <h3 class="text-xl font-bold text-gray-700 mb-6">正直にお伝えします。<br>以下のような企業様には、Sync Baseは向きません。</h3>
+            <h3 class="text-xl font-bold text-gray-700 mb-6">以下に該当する企業様には不要です。</h3>
             <div class="bg-white p-8 rounded-xl shadow-sm text-left inline-block">
                 <ul class="space-y-4 text-gray-600">
                     <li class="flex items-start gap-3">
                         <i class="fa-solid fa-check text-gray-400 mt-1"></i>
-                        <span>手書き注文・FAX注文がほとんどない企業様</span>
+                        <span>FAX注文・手書き伝票がほぼ存在しない</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <i class="fa-solid fa-check text-gray-400 mt-1"></i>
-                        <span>すでにEDI（Web受発注）が100%稼働している企業様</span>
+                        <span>EDIが100%定着し運用が完了している</span>
                     </li>
                 </ul>
                 <p class="mt-6 text-sm text-gray-500 border-t pt-4">
-                    逆に、<span class="font-bold text-gray-800">「FAXと手書き注文をゼロにできず困っている」</span>企業様には、<br class="hidden sm:inline">
-                    これ以上ない解決策になることをお約束します。
+                    逆に、<span class="font-bold text-gray-800">「FAX・紙注文をゼロにできず困っている」</span>企業様には、<br>
+                    極めて大きな改善効果を提供できます。
                 </p>
             </div>
         </div>
@@ -224,13 +264,11 @@
     <section id="contact" class="py-20 bg-gray-900 text-white">
         <div class="max-w-4xl mx-auto px-6 text-center">
             <h2 class="text-3xl font-bold mb-6">
-                現場の「疲弊」を終わらせる。<br>
-                その最初の一歩を踏み出しませんか？
+                属人化を終わらせ、継続運用できる業務体制へ。
             </h2>
             <p class="text-gray-400 mb-10">
                 まずは15分のオンラインデモで、<br>
-                「手書き文字が一瞬でデータになる様子」をご覧ください。<br>
-                無理な営業は一切いたしません。
+                「手書き文字が一瞬でデータ化される様子」をご確認ください。
             </p>
 
             <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank" class="inline-flex items-center gap-3 bg-brand-accent hover:bg-orange-600 text-white font-bold py-5 px-10 rounded-2xl text-xl shadow-lg transition transform hover:-translate-y-1">
