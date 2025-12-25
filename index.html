@@ -1,295 +1,309 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sync Base | アナログ注文AI自動化SaaS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sync Base | アナログ注文AI自動化SaaS</title>
 
-    <link rel="icon" href="favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="favicon.png">
-    
-    <meta name="description" content="FAX・LINE注文の入力作業をゼロに。建材卸・資材商社の管理部責任者・バックオフィス統括向けAI自動化システム。">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Noto Sans JP"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            main: '#0F766E',
-                            dark: '#134E4A',
-                            light: '#F0FDFA',
-                            accent: '#F59E0B',
-                        }
-                    }
-                }
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+
+  <meta name="description" content="FAX・LINE注文の入力作業をゼロに。建材卸・資材商社の管理部責任者・バックオフィス統括向けAI自動化システム。" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind設定：ここには設定だけを書く -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              main: '#0F766E',
+              dark: '#134E4A',
+              light: '#F0FDFA',
+              accent: '#F59E0B',
             }
+          }
         }
-
-    (function () {
-        const ids = ["btnTimerex", "btnTimerexHero"]; // 予約ボタンのIDを列挙
-        const srcParams = new URLSearchParams(window.location.search);
-
-        const allowKeys = [
-        "cid", "v",
-        "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"
-        ];
-
-        ids.forEach((id) => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
-
-        const destUrl = new URL(btn.href);
-        allowKeys.forEach((k) => {
-            const val = srcParams.get(k);
-            if (val) destUrl.searchParams.set(k, val);
-        });
-
-        btn.href = destUrl.toString();
-        });
-    })();
-
-    </script>
+      }
+    };
+  </script>
 </head>
+
 <body class="bg-white text-gray-800 antialiased">
 
-    <header class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-               <img src="logo.png" alt="Sync Base Logo" class="h-12 w-auto object-contain">
-               <span class="text-xl font-bold text-gray-900 tracking-tight">Sync Base</span>
-            </div>
-            <nav class="hidden md:flex gap-8 text-sm font-medium text-gray-600">
-                <a href="#problem" class="hover:text-brand-main transition">課題</a>
-                <a href="#solution" class="hover:text-brand-main transition">機能</a>
-                <a href="#price" class="hover:text-brand-main transition">価格</a>
-            </nav>
-            <a id="btnTimerex"
-                href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
-                target="_blank"
-                class="bg-brand-main text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md">
-                無料デモ予約
-             </a>
+  <header class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="Sync Base Logo" class="h-12 w-auto object-contain" />
+        <span class="text-xl font-bold text-gray-900 tracking-tight">Sync Base</span>
+      </div>
+      <nav class="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+        <a href="#problem" class="hover:text-brand-main transition">課題</a>
+        <a href="#solution" class="hover:text-brand-main transition">機能</a>
+        <a href="#price" class="hover:text-brand-main transition">価格</a>
+      </nav>
+
+      <a
+        href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+        target="_blank"
+        class="bg-brand-main text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md"
+      >
+        無料デモ予約
+      </a>
+    </div>
+  </header>
+
+  <section class="pt-32 pb-20 bg-gradient-to-br from-brand-light to-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <span class="inline-block py-1 px-3 rounded-full bg-brand-100 text-brand-dark text-xs font-bold mb-6 border border-brand-200">
+        建材卸・資材商社の 管理部責任者・バックオフィス統括の皆様へ
+      </span>
+
+      <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
+        「採用しても、育てても、また辞める──」
+      </h1>
+
+      <p class="text-lg text-gray-600 mb-10 leading-relaxed font-bold">
+        FAX注文・手書き伝票の入力業務に<br />
+        人を割き続ける体制から抜け出しませんか？<br />
+        現場依存の入力作業を、AIが「標準化・自動化」します。
+      </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a
+          href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+          target="_blank"
+          class="bg-brand-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-2 transform hover:-translate-y-1"
+        >
+          <i class="fa-regular fa-calendar-check"></i> 無料デモを予約する
+        </a>
+
+        <a
+          href="#demo"
+          class="bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-play"></i> 30秒動画を見る
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem" class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          課題は「採用」ではありません。<br />
+          <span class="text-red-600">教育と属人化が永続する業務構造です。</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-12 items-center">
+        <div class="w-full max-w-3xl bg-gray-50 p-8 rounded-2xl border border-gray-200">
+          <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-2 text-center md:text-left">バックオフィスが疲弊する要因</h3>
+          <ul class="space-y-4 text-gray-600">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+              <span>取引先ごとに異なるFAX注文書の読み替え作業</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+              <span>商品名・型番・社内呼称が混在し、教育コストが膨張</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+              <span>覚えた頃に退職 → 採用・教育のやり直し</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+              <span>月末だけ伝票が山積み、残業が常態化</span>
+            </li>
+          </ul>
+          <p class="mt-6 text-gray-700 font-bold text-center">
+            「人を補充する」ではなく<br />
+            <span class="text-brand-main underline">入力作業そのものをなくす</span>という解決へ。
+          </p>
         </div>
-    </header>
 
-    <section class="pt-32 pb-20 bg-gradient-to-br from-brand-light to-white">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-brand-100 text-brand-dark text-xs font-bold mb-6 border border-brand-200">
-                建材卸・資材商社の 管理部責任者・バックオフィス統括の皆様へ
-            </span>
-
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
-                「採用しても、育てても、また辞める──」
-            </h1>
-
-            <p class="text-lg text-gray-600 mb-10 leading-relaxed font-bold">
-                FAX注文・手書き伝票の入力業務に<br>
-                人を割き続ける体制から抜け出しませんか？<br>
-                現場依存の入力作業を、AIが「標準化・自動化」します。
-            </p>
-
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a id="btnTimerexHero"
-                href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
-                target="_blank"
-                class="bg-brand-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-2 transform hover:-translate-y-1">
-                <i class="fa-regular fa-calendar-check"></i> 無料デモを予約する
-                </a>
-
-                <a href="#demo" class="bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-play"></i> 30秒動画を見る
-                </a>
-            </div>
+        <div id="demo" class="relative w-full shadow-2xl rounded-2xl">
+          <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-main text-white px-6 py-2 rounded-t-lg font-bold text-base shadow-md w-max z-10">
+            入力作業は、ここまで自動化できます。
+          </div>
+          <div class="aspect-video rounded-2xl overflow-hidden border-4 border-gray-800 bg-black w-full">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/Kj3P3KX6P60?rel=0&modestbranding=1&playsinline=1&mute=1"
+              title="Sync Base Demo"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section id="problem" class="py-20 bg-white">
-        <div class="max-w-5xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    課題は「採用」ではありません。<br>
-                    <span class="text-red-600">教育と属人化が永続する業務構造です。</span>
-                </h2>
-            </div>
-            
-            <div class="flex flex-col gap-12 items-center">
-                <div class="w-full max-w-3xl bg-gray-50 p-8 rounded-2xl border border-gray-200">
-                    <h3 class="font-bold text-xl mb-6 text-gray-800 border-b pb-2 text-center md:text-left">バックオフィスが疲弊する要因</h3>
-                    <ul class="space-y-4 text-gray-600">
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
-                            <span>取引先ごとに異なるFAX注文書の読み替え作業</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
-                            <span>商品名・型番・社内呼称が混在し、教育コストが膨張</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
-                            <span>覚えた頃に退職 → 採用・教育のやり直し</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
-                            <span>月末だけ伝票が山積み、残業が常態化</span>
-                        </li>
-                    </ul>
-                    <p class="mt-6 text-gray-700 font-bold text-center">
-                        「人を補充する」ではなく<br>
-                        <span class="text-brand-main underline">入力作業そのものをなくす</span>という解決へ。
-                    </p>
-                </div>
+  <section id="solution" class="py-20 bg-brand-light">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          Sync Baseが、バックオフィス業務を<br />
+          <span class="text-brand-main">“標準化”と“自動化”へ移行させます。</span>
+        </h2>
+        <p class="text-gray-600">新人が入れ替わっても、同じ品質で回る体制を構築します。</p>
+      </div>
 
-                <div id="demo" class="relative w-full shadow-2xl rounded-2xl">
-                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-main text-white px-6 py-2 rounded-t-lg font-bold text-base shadow-md w-max z-10">
-                        入力作業は、ここまで自動化できます。
-                    </div>
-                    <div class="aspect-video rounded-2xl overflow-hidden border-4 border-gray-800 bg-black w-full">
-                        <iframe 
-                            width="100%" 
-                            height="100%" 
-                            src="https://www.youtube.com/embed/Kj3P3KX6P60?rel=0&modestbranding=1&playsinline=1&mute=1" 
-                            title="Sync Base Demo" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                </div>
-            </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
+          <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">FAX・画像を自動データ化</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">手書き注文書・PDF・写真・LINEスクショまで対象。AIが瞬時に構造化します。</p>
         </div>
-    </section>
-
-    <section id="solution" class="py-20 bg-brand-light">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    Sync Baseが、バックオフィス業務を<br>
-                    <span class="text-brand-main">“標準化”と“自動化”へ移行させます。</span>
-                </h2>
-                <p class="text-gray-600">新人が入れ替わっても、同じ品質で回る体制を構築します。</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">FAX・画像を自動データ化</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">手書き注文書・PDF・写真・LINEスクショまで対象。AIが瞬時に構造化します。</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
-                        <i class="fa-solid fa-eye"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">人は「確認」だけ</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">入力作業から解放され、作業は最終チェックのみ。教育範囲が極小化されます。</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
-                        <i class="fa-solid fa-shield-heart"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">属人業務をゼロへ</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">知識が個人に閉じず、業務が標準化。退職・異動の影響を受けない体制に。</p>
-                </div>
-            </div>
-
-            <div class="mt-12 max-w-3xl mx-auto bg-white border border-brand-200 p-6 rounded-xl flex items-start gap-4 shadow-sm">
-                <i class="fa-solid fa-circle-info text-brand-main text-xl mt-1"></i>
-                <div>
-                    <h4 class="font-bold text-brand-dark mb-1">安心の「自信度アラート＋ワンクリック修正」</h4>
-                    <p class="text-sm text-gray-600">
-                        AIが迷った箇所は「要確認」と表示。入力責任は人が保持しつつ、作業だけを自動化します。
-                    </p>
-                </div>
-            </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
+          <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">人は「確認」だけ</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">入力作業から解放され、作業は最終チェックのみ。教育範囲が極小化されます。</p>
         </div>
-    </section>
-
-    <section id="price" class="py-20 bg-white">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-12">コストと運用負荷の比較</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="p-8 border border-gray-200 rounded-2xl bg-gray-50">
-                    <p class="text-gray-500 font-bold mb-2">人材採用＋教育で運用する場合</p>
-                    <p class="text-3xl font-bold text-gray-400 mb-6">¥350<span class="text-base">万 / 年</span></p>
-                    <ul class="text-left text-sm text-gray-500 space-y-3 pl-4 list-disc">
-                        <li>教育に半年以上</li>
-                        <li>定着リスク・再採用コスト</li>
-                        <li>属人化が残り、引き継ぎ困難</li>
-                    </ul>
-                </div>
-                <div class="p-8 border-4 border-brand-main rounded-2xl bg-white relative overflow-hidden shadow-xl transform scale-105">
-                    <div class="absolute top-0 right-0 bg-brand-accent text-white text-xs font-bold px-3 py-1 rounded-bl-lg">RECOMMEND</div>
-                    <p class="text-brand-main font-bold mb-2">Sync Base (AI)</p>
-                    <p class="text-4xl font-black text-gray-900 mb-6">¥60<span class="text-lg font-medium text-gray-600">万 / 年</span></p>
-                    <p class="text-sm font-bold text-gray-600 mb-4">（月額5万円 × 12ヶ月）</p>
-                    <ul class="text-left text-sm text-gray-800 space-y-3 pl-4 list-disc font-medium">
-                        <li>即日稼働・教育ほぼ不要</li>
-                        <li>標準化された業務フロー</li>
-                        <li>人に依存しない運用体制</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition">
+          <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-main text-2xl mb-6">
+            <i class="fa-solid fa-shield-heart"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">属人業務をゼロへ</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">知識が個人に閉じず、業務が標準化。退職・異動の影響を受けない体制に。</p>
         </div>
-    </section>
+      </div>
 
-    <section class="py-16 bg-gray-100 border-y border-gray-200">
-        <div class="max-w-3xl mx-auto px-6 text-center">
-            <h3 class="text-xl font-bold text-gray-700 mb-6">以下に該当する企業様には不要です。</h3>
-            <div class="bg-white p-8 rounded-xl shadow-sm text-left inline-block">
-                <ul class="space-y-4 text-gray-600">
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check text-gray-400 mt-1"></i>
-                        <span>FAX注文・手書き伝票がほぼ存在しない</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check text-gray-400 mt-1"></i>
-                        <span>EDIが100%定着し運用が完了している</span>
-                    </li>
-                </ul>
-                <p class="mt-6 text-sm text-gray-500 border-t pt-4">
-                    逆に、<span class="font-bold text-gray-800">「FAX・紙注文をゼロにできず困っている」</span>企業様には、<br>
-                    極めて大きな改善効果を提供できます。
-                </p>
-            </div>
+      <div class="mt-12 max-w-3xl mx-auto bg-white border border-brand-200 p-6 rounded-xl flex items-start gap-4 shadow-sm">
+        <i class="fa-solid fa-circle-info text-brand-main text-xl mt-1"></i>
+        <div>
+          <h4 class="font-bold text-brand-dark mb-1">安心の「自信度アラート＋ワンクリック修正」</h4>
+          <p class="text-sm text-gray-600">
+            AIが迷った箇所は「要確認」と表示。入力責任は人が保持しつつ、作業だけを自動化します。
+          </p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section id="contact" class="py-20 bg-gray-900 text-white">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-6">
-                属人化を終わらせ、継続運用できる業務体制へ。
-            </h2>
-            <p class="text-gray-400 mb-10">
-                まずは15分のオンラインデモで、<br>
-                「手書き文字が一瞬でデータ化される様子」をご確認ください。
-            </p>
-
-            <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank" class="inline-flex items-center gap-3 bg-brand-accent hover:bg-orange-600 text-white font-bold py-5 px-10 rounded-2xl text-xl shadow-lg transition transform hover:-translate-y-1">
-                <i class="fa-regular fa-calendar-check"></i>
-                無料デモ・相談を予約する
-            </a>
-            
-            <div class="mt-20 border-t border-gray-800 pt-10 text-sm text-gray-500">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <img src="logo.png" alt="Logo" class="h-8 opacity-50">
-                        <span>Sync Base</span>
-                    </div>
-                    <div class="text-center md:text-right">
-                        <p>代表：久野 | Email: info@sync-base.jp</p>
-                        <p class="mt-2">&copy; 2025 Sync Base. All rights reserved.</p>
-                    </div>
-                </div>
-            </div>
+  <section id="price" class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-12">コストと運用負荷の比較</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="p-8 border border-gray-200 rounded-2xl bg-gray-50">
+          <p class="text-gray-500 font-bold mb-2">人材採用＋教育で運用する場合</p>
+          <p class="text-3xl font-bold text-gray-400 mb-6">¥350<span class="text-base">万 / 年</span></p>
+          <ul class="text-left text-sm text-gray-500 space-y-3 pl-4 list-disc">
+            <li>教育に半年以上</li>
+            <li>定着リスク・再採用コスト</li>
+            <li>属人化が残り、引き継ぎ困難</li>
+          </ul>
         </div>
-    </section>
+        <div class="p-8 border-4 border-brand-main rounded-2xl bg-white relative overflow-hidden shadow-xl transform scale-105">
+          <div class="absolute top-0 right-0 bg-brand-accent text-white text-xs font-bold px-3 py-1 rounded-bl-lg">RECOMMEND</div>
+          <p class="text-brand-main font-bold mb-2">Sync Base (AI)</p>
+          <p class="text-4xl font-black text-gray-900 mb-6">¥60<span class="text-lg font-medium text-gray-600">万 / 年</span></p>
+          <p class="text-sm font-bold text-gray-600 mb-4">（月額5万円 × 12ヶ月）</p>
+          <ul class="text-left text-sm text-gray-800 space-y-3 pl-4 list-disc font-medium">
+            <li>即日稼働・教育ほぼ不要</li>
+            <li>標準化された業務フロー</li>
+            <li>人に依存しない運用体制</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-gray-100 border-y border-gray-200">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h3 class="text-xl font-bold text-gray-700 mb-6">以下に該当する企業様には不要です。</h3>
+      <div class="bg-white p-8 rounded-xl shadow-sm text-left inline-block">
+        <ul class="space-y-4 text-gray-600">
+          <li class="flex items-start gap-3">
+            <i class="fa-solid fa-check text-gray-400 mt-1"></i>
+            <span>FAX注文・手書き伝票がほぼ存在しない</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="fa-solid fa-check text-gray-400 mt-1"></i>
+            <span>EDIが100%定着し運用が完了している</span>
+          </li>
+        </ul>
+        <p class="mt-6 text-sm text-gray-500 border-t pt-4">
+          逆に、<span class="font-bold text-gray-800">「FAX・紙注文をゼロにできず困っている」</span>企業様には、<br />
+          極めて大きな改善効果を提供できます。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-20 bg-gray-900 text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold mb-6">
+        属人化を終わらせ、継続運用できる業務体制へ。
+      </h2>
+      <p class="text-gray-400 mb-10">
+        まずは15分のオンラインデモで、<br />
+        「手書き文字が一瞬でデータ化される様子」をご確認ください。
+      </p>
+
+      <a
+        href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+        target="_blank"
+        class="inline-flex items-center gap-3 bg-brand-accent hover:bg-orange-600 text-white font-bold py-5 px-10 rounded-2xl text-xl shadow-lg transition transform hover:-translate-y-1"
+      >
+        <i class="fa-regular fa-calendar-check"></i>
+        無料デモ・相談を予約する
+      </a>
+
+      <div class="mt-20 border-t border-gray-800 pt-10 text-sm text-gray-500">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-2">
+            <img src="logo.png" alt="Logo" class="h-8 opacity-50" />
+            <span>Sync Base</span>
+          </div>
+          <div class="text-center md:text-right">
+            <p>代表：久野 | Email: info@sync-base.jp</p>
+            <p class="mt-2">&copy; 2025 Sync Base. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ ここに置く：DOM読み込み後にtimerexリンクを書き換える -->
+  <script>
+    (function () {
+      const srcParams = new URLSearchParams(window.location.search);
+
+      const allowKeys = new Set([
+        "cid", "v",
+        "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"
+      ]);
+
+      document.querySelectorAll('a[href*="timerex.net/"]').forEach((a) => {
+        try {
+          const destUrl = new URL(a.href);
+          for (const [k, v] of srcParams.entries()) {
+            if (allowKeys.has(k) && v) destUrl.searchParams.set(k, v);
+          }
+          a.href = destUrl.toString();
+        } catch (e) {
+          // ignore
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
