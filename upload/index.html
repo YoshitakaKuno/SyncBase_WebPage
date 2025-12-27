@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sync Base | アップロード（注文書・伝票）</title>
+
+  <!-- favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+
+  <meta name="description" content="FAX注文書・手書き伝票・画像/PDFをまとめてアップロードし、AIで自動データ化します。" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Noto Sans JP"', 'sans-serif'] },
+          colors: {
+            brand: {
+              main: '#0F766E',
+              dark: '#134E4A',
+              light: '#F0FDFA',
+              accent: '#F59E0B',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    .glass {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-brand-light to-white text-gray-800 antialiased min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 hover:opacity-90 transition">
+        <img src="assets/logo.png" alt="Sync Base Logo" class="h-10 w-auto object-contain" />
+        <div class="leading-tight">
+          <div class="text-lg font-black text-gray-900">Sync Base</div>
+          <div class="text-[11px] font-bold text-gray-500">注文書・伝票アップロード</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="/" class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-brand-main transition">
+          <i class="fa-solid fa-arrow-left"></i> LPへ戻る
+        </a>
+        <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank"
+          class="inline-flex items-center gap-2 bg-brand-main text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md">
+          <i class="fa-regular fa-calendar-check"></i> 無料デモ予約
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl sm:text-3xl font-black text-gray-900">複数枚まとめてアップロード</h1>
+      <p class="mt-2 text-gray-600">
+        FAX注文書・手書き伝票・写真・PDFをまとめて入れてください。<br class="hidden sm:block" />
+        AI解析 → n8n → スプレッドシートへ反映（検証用）
+      </p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
+      <div class="p-6 sm:p-8">
+        <!-- Drop zone -->
+        <div id="drop-zone"
+          class="relative border-2 border-dashed border-gray-300 rounded-2xl p-8 sm:p-10 text-center cursor-pointer
+                 hover:border-brand-main hover:bg-brand-light transition">
+          <input id="file-input" type="file" class="hidden" accept="image/*,.pdf" multiple />
+
+          <div id="idle-ui">
+            <div class="w-16 h-16 mx-auto rounded-full bg-brand-light flex items-center justify-center text-brand-main mb-5">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+            </div>
+            <div class="text-lg font-bold text-gray-900">ここにファイルをドロップ</div>
+            <div class="text-sm text-gray-500 mt-1">またはクリックしてファイルを選択（複数可）</div>
+
+            <div class="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
+              <button id="pick-btn"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold
+                       bg-brand-main text-white hover:bg-brand-dark transition shadow-md">
+                <i class="fa-regular fa-folder-open"></i> ファイルを選択
+              </button>
+
+              <button id="clear-btn"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold
+                       bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition">
+                <i class="fa-solid fa-broom"></i> リセット
+              </button>
+            </div>
+
+            <p class="mt-4 text-xs text-gray-400">
+              ※ 対応：JPG / PNG / PDF（最大サイズは運用に合わせて調整）
+            </p>
+          </div>
+
+          <!-- Uploading UI -->
+          <div id="uploading-ui" class="hidden">
+            <div class="flex items-center justify-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full border-4 border-gray-100 border-t-brand-main animate-spin"></div>
+              <div class="text-left">
+                <div class="text-sm font-bold text-gray-900" id="progress-title">アップロード中…</div>
+                <div class="text-xs text-gray-500" id="progress-sub">0 / 0</div>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-left">
+              <div class="text-xs font-bold text-gray-600 mb-2">処理キュー</div>
+              <ul id="queue-list" class="space-y-2 text-sm text-gray-700"></ul>
+            </div>
+          </div>
+
+          <!-- Done UI -->
+          <div id="done-ui" class="hidden">
+            <div class="w-16 h-16 mx-auto rounded-full bg-green-500 text-white flex items-center justify-center mb-4 shadow-lg">
+              <i class="fa-solid fa-check text-2xl"></i>
+            </div>
+            <div class="text-lg font-black text-gray-900">完了</div>
+            <div class="text-sm text-gray-600 mt-1" id="done-msg">処理が完了しました。</div>
+
+            <div class="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
+              <button id="again-btn"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold
+                       bg-brand-main text-white hover:bg-brand-dark transition shadow-md">
+                <i class="fa-solid fa-rotate-right"></i> 続けてアップロード
+              </button>
+
+              <a href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6" target="_blank"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold
+                       bg-brand-accent text-white hover:bg-orange-600 transition shadow-md">
+                <i class="fa-regular fa-calendar-check"></i> デモ予約へ
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Result log -->
+        <div class="mt-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-gray-700">処理ログ（このページ内）</h2>
+            <span class="text-xs text-gray-400">※ 実運用はGA4/DBへ寄せる</span>
+          </div>
+
+          <div class="mt-3 bg-white border border-gray-200 rounded-xl overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-500">
+                <tr>
+                  <th class="px-4 py-3">状態</th>
+                  <th class="px-4 py-3">ファイル名</th>
+                  <th class="px-4 py-3 text-right">時刻</th>
+                </tr>
+              </thead>
+              <tbody id="log-table" class="divide-y divide-gray-100">
+                <tr>
+                  <td class="px-4 py-3 text-gray-400" colspan="3">まだ処理はありません</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-6 text-xs text-gray-500">
+          <div class="bg-brand-light border border-teal-100 rounded-xl p-4">
+            <div class="font-bold text-brand-dark mb-1"><i class="fa-solid fa-circle-info"></i> メモ（検証用）</div>
+            <ul class="list-disc pl-5 space-y-1">
+              <li>複数ファイルは「1件ずつ」Webhookへ送ります（n8n側が単一ファイル想定でも安全）</li>
+              <li>ドラッグで新規タブが開く挙動は、ページ全体のdropを抑止して回避します</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <footer class="px-6 sm:px-8 py-5 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 flex flex-col sm:flex-row gap-2 justify-between">
+        <div>© 2025 Sync Base</div>
+        <div>検証用アップローダー（本番導入時は権限・ログ・上限・監査を追加）</div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    /**
+     * ★Webhook URL（Vercelに上げるなら n8n Cloud / 公開URL 推奨）
+     * ローカル検証: http://localhost:5678/webhook/xxxx
+     * 本番/検証: https://xxxxx.hooks.n8n.cloud/webhook/xxxx
+     */
+    const WEBHOOK_URL = "http://localhost:5678/webhook/b17bb4da-15b0-4626-aeb1-59a684f3e883";
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    const idleUI = document.getElementById('idle-ui');
+    const uploadingUI = document.getElementById('uploading-ui');
+    const doneUI = document.getElementById('done-ui');
+
+    const pickBtn = document.getElementById('pick-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const againBtn = document.getElementById('again-btn');
+
+    const progressTitle = document.getElementById('progress-title');
+    const progressSub = document.getElementById('progress-sub');
+    const queueList = document.getElementById('queue-list');
+
+    const logTable = document.getElementById('log-table');
+    const doneMsg = document.getElementById('done-msg');
+
+    // ✅ ここが「ドラッグしたら新規タブで画像が開く」問題の根本対策
+    // ページ全体の dragover/drop を抑止（dropZone側で処理する）
+    window.addEventListener('dragover', (e) => { e.preventDefault(); }, { passive: false });
+    window.addEventListener('drop', (e) => { e.preventDefault(); }, { passive: false });
+
+    // Drop zone: UI feedback
+    dropZone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-brand-main', 'bg-brand-light');
+    });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-brand-main', 'bg-brand-light');
+    });
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-brand-main', 'bg-brand-light');
+    });
+
+    // Drop files
+    dropZone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-brand-main', 'bg-brand-light');
+      const files = e.dataTransfer?.files;
+      if (!files || files.length === 0) return;
+      await handleFiles(Array.from(files));
+    });
+
+    // Click to pick
+    dropZone.addEventListener('click', () => fileInput.click());
+    pickBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async (e) => {
+      const files = e.target.files ? Array.from(e.target.files) : [];
+      if (files.length === 0) return;
+      await handleFiles(files);
+    });
+
+    clearBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetUI(true);
+    });
+
+    againBtn?.addEventListener('click', () => {
+      resetUI(true);
+    });
+
+    function resetUI(clearLog = false) {
+      fileInput.value = "";
+      showIdle();
+
+      queueList.innerHTML = "";
+      if (clearLog) {
+        logTable.innerHTML = `<tr><td class="px-4 py-3 text-gray-400" colspan="3">まだ処理はありません</td></tr>`;
+      }
+    }
+
+    function showIdle() {
+      idleUI.classList.remove('hidden');
+      uploadingUI.classList.add('hidden');
+      doneUI.classList.add('hidden');
+    }
+
+    function showUploading() {
+      idleUI.classList.add('hidden');
+      uploadingUI.classList.remove('hidden');
+      doneUI.classList.add('hidden');
+    }
+
+    function showDone() {
+      idleUI.classList.add('hidden');
+      uploadingUI.classList.add('hidden');
+      doneUI.classList.remove('hidden');
+    }
+
+    function formatTime(d = new Date()) {
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    function setQueue(files) {
+      queueList.innerHTML = "";
+      files.forEach((f) => {
+        const li = document.createElement('li');
+        li.className = "flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-lg px-3 py-2";
+        li.innerHTML = `
+          <div class="min-w-0">
+            <div class="font-bold text-gray-900 truncate">${escapeHtml(f.name)}</div>
+            <div class="text-xs text-gray-500">${Math.ceil(f.size / 1024)} KB</div>
+          </div>
+          <span class="text-xs font-bold text-gray-500" data-status>待機</span>
+        `;
+        queueList.appendChild(li);
+      });
+    }
+
+    function updateQueueStatus(index, text, tone = 'gray') {
+      const li = queueList.children[index];
+      if (!li) return;
+      const badge = li.querySelector('[data-status]');
+      if (!badge) return;
+
+      const cls = {
+        gray: 'text-gray-500',
+        blue: 'text-blue-600',
+        green: 'text-green-600',
+        red: 'text-red-600'
+      }[tone] || 'text-gray-500';
+
+      badge.className = `text-xs font-black ${cls}`;
+      badge.textContent = text;
+    }
+
+    function addLogRow(status, fileName) {
+      // 初回の「まだ処理はありません」を消す
+      if (logTable.children.length === 1 && logTable.children[0].innerText.includes('まだ処理はありません')) {
+        logTable.innerHTML = "";
+      }
+
+      const tr = document.createElement('tr');
+      const badge = status === 'OK'
+        ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">OK</span>`
+        : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">NG</span>`;
+
+      tr.innerHTML = `
+        <td class="px-4 py-3">${badge}</td>
+        <td class="px-4 py-3 text-gray-900 font-bold">${escapeHtml(fileName)}</td>
+        <td class="px-4 py-3 text-gray-400 text-right">${formatTime()}</td>
+      `;
+      logTable.prepend(tr);
+    }
+
+    async function handleFiles(files) {
+      // accept: images + pdf only
+      const allowed = files.filter(f => {
+        const isPdf = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+        const isImg = f.type.startsWith('image/');
+        return isPdf || isImg;
+      });
+
+      if (allowed.length === 0) {
+        alert("対応していない形式です（JPG/PNG/PDFのみ）");
+        return;
+      }
+
+      showUploading();
+      setQueue(allowed);
+
+      let okCount = 0;
+      let ngCount = 0;
+
+      progressTitle.textContent = "アップロード中…";
+      progressSub.textContent = `0 / ${allowed.length}`;
+
+      for (let i = 0; i < allowed.length; i++) {
+        const file = allowed[i];
+        updateQueueStatus(i, '送信中', 'blue');
+        progressSub.textContent = `${i} / ${allowed.length}`;
+
+        try {
+          await uploadOne(file);
+          okCount++;
+          updateQueueStatus(i, '完了', 'green');
+          addLogRow('OK', file.name);
+        } catch (err) {
+          console.error(err);
+          ngCount++;
+          updateQueueStatus(i, '失敗', 'red');
+          addLogRow('NG', file.name);
+        }
+
+        progressSub.textContent = `${i + 1} / ${allowed.length}`;
+      }
+
+      doneMsg.textContent = `完了：${okCount}件 / 失敗：${ngCount}件`;
+      showDone();
+    }
+
+    async function uploadOne(file) {
+      const formData = new FormData();
+      formData.append('data', file);
+      formData.append('filename', file.name);
+
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const text = await safeReadText(res);
+        throw new Error(`Webhook error: ${res.status} ${res.statusText} ${text ? `| ${text}` : ''}`);
+      }
+    }
+
+    async function safeReadText(res) {
+      try { return await res.text(); } catch (_) { return ""; }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    // 初期表示
+    resetUI(false);
+  </script>
+</body>
+</html>
