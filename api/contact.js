@@ -1,14 +1,5 @@
 const GAS_ENDPOINT = process.env.GAS_ENDPOINT || "";
 
-const ENTRY_MAP = {
-  company: "entry.2076927326",
-  name: "entry.416174814",
-  phone: "entry.1132384252",
-  address: "entry.1114851624",
-  email: "entry.2088062067",
-  message: "entry.1665870488",
-};
-
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let data = "";
@@ -38,11 +29,13 @@ function parseBody(req) {
 
 function buildGooglePayload(fields) {
   const payload = new URLSearchParams();
-  Object.entries(ENTRY_MAP).forEach(([key, entry]) => {
-    if (fields[key]) {
-      payload.append(entry, fields[key]);
+  ["company", "name", "phone", "address", "email", "message", "source"].forEach(
+    (key) => {
+      if (fields[key]) {
+        payload.append(key, fields[key]);
+      }
     }
-  });
+  );
   return payload;
 }
 
