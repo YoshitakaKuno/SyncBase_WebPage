@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sync Base | 注文書入力を「確認だけ」にする仕組み</title>
+    
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/favicon.png" />
+    
+    <meta name="description" content="月末の注文書入力で残業になっていませんか？FAX・メールPDF・写真などの注文書をスプシ/CSVにまとめ、入力を「確認だけ」に。取引先ごとの形式違いも最初に合わせ込んで運用できる形にします。" />
+    
+    <!-- ✅（あとで入れる）GTM：ここに head 用スニペットを貼る -->
+    <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXX');</script> -->
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['"Noto Sans JP"', 'sans-serif'] },
+            colors: {
+              brand: {
+                main: '#0F766E',
+                dark: '#134E4A',
+                light: '#F0FDFA',
+                accent: '#F59E0B',
+              }
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  
+  <body class="bg-white text-gray-800 antialiased">
+    <!-- ✅（あとで入れる）GTM：ここに body 用 noscript を貼る -->
+    <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+    
+    <header class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.png" alt="Sync Base" class="h-10 w-auto object-contain" />
+          <span class="text-xl font-bold text-gray-900 tracking-tight">Sync Base</span>
+        </div>
+        
+        <nav class="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+          <a href="#why" class="hover:text-brand-main transition">できること</a>
+          <a href="#demo" class="hover:text-brand-main transition">デモ</a>
+          <a href="#price" class="hover:text-brand-main transition">料金</a>
+          <a href="#faq" class="hover:text-brand-main transition">FAQ</a>
+        </nav>
+        
+        <a
+          href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+          target="_blank"
+          data-track="timerex_click"
+          class="bg-brand-main text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-dark transition shadow-md"
+          >
+          無料デモ予約
+        </a>
+      </div>
+    </header>
+    
+    <!-- HERO -->
+    <section class="pt-32 pb-16 bg-gradient-to-br from-brand-light to-white">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <span class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-white text-brand-dark text-xs font-bold mb-6 border border-brand-200">
+              <i class="fa-solid fa-clipboard-check text-brand-main"></i>
+              管理部・営業事務・業務課の方向け
+            </span>
+            
+            <!-- ✅ H1：案A -->
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
+              月末、注文書の入力で残業になっていませんか？
+            </h1>
+            
+            <!-- ✅ サブ：案B要素混ぜ -->
+            <p class="text-lg text-gray-700 mb-5 leading-relaxed font-bold">
+              覚えた頃に辞める、引き継ぎがつらい…。<br />
+              まずは『入力を減らす』ところから始めます。
+            </p>
+            
+            <p class="text-base text-gray-600 mb-8 leading-relaxed">
+              FAX・メール添付のPDF・写真など、形式がバラバラでも大丈夫。<br />
+              注文書を <span class="font-bold text-brand-dark">スプシ/CSV</span> にまとめて、入力は「打つ」から「確認する」へ。
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a
+                href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+                target="_blank"
+                data-track="timerex_click"
+                class="bg-brand-accent text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-2 transform hover:-translate-y-1"
+                >
+                <i class="fa-regular fa-calendar-check"></i> 無料デモを予約する（15分）
+              </a>
+              
+              <a
+                href="#demo"
+                data-track="demo_scroll"
+                class="bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition flex items-center justify-center gap-2"
+                >
+                <i class="fa-solid fa-play"></i> 30秒動画を見る
+              </a>
+            </div>
+            
+            <div class="mt-6 text-sm text-gray-500">
+              <i class="fa-solid fa-circle-info mr-1 text-brand-main"></i>
+              「うちは特殊だから無理かも…」もOK。まずは注文書1枚で確認できます。
+            </div>
+          </div>
+          
+          <!-- Right card -->
+          <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-bold text-gray-800">よくある現場</p>
+              <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">月末あるある</span>
+            </div>
+            
+            <ul class="space-y-4 text-gray-700">
+              <li class="flex gap-3">
+              <div class="mt-1 text-red-500"><i class="fa-solid fa-circle-exclamation"></i></div>
+              <div>
+                <p class="font-bold">入力が積まれて、帰れない</p>
+                <p class="text-sm text-gray-600">注文書が来るたびに、手作業で転記。</p>
+              </div>
+              </li>
+              <li class="flex gap-3">
+              <div class="mt-1 text-red-500"><i class="fa-solid fa-circle-exclamation"></i></div>
+              <div>
+                <p class="font-bold">担当者によって処理がブレる</p>
+                <p class="text-sm text-gray-600">読み替え・呼び方・書き方が人依存。</p>
+              </div>
+              </li>
+              <li class="flex gap-3">
+              <div class="mt-1 text-red-500"><i class="fa-solid fa-circle-exclamation"></i></div>
+              <div>
+                <p class="font-bold">引き継ぎが地獄</p>
+                <p class="text-sm text-gray-600">覚えることが多すぎて、定着しない。</p>
+              </div>
+              </li>
+            </ul>
+            
+            <div class="mt-6 p-4 rounded-xl bg-brand-light border border-brand-200">
+              <p class="font-bold text-brand-dark mb-1">Sync Baseで変わること</p>
+              <p class="text-sm text-gray-700">
+                注文書の“転記作業”を減らして、<span class="font-bold">確認に集中</span>できる状態を作ります。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- WHAT / WHY -->
+    <section id="why" class="py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-14">
+          <h2 class="text-3xl font-bold text-gray-900 mb-3">
+            まずは「注文書 → スプシ/CSV」まで。
+          </h2>
+          <p class="text-gray-600">
+            いきなり大がかりに変えず、今日から“入力を減らす”ところから始めます。
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200 hover:shadow-md transition">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-main text-2xl mb-6 border border-gray-200">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">形式が違ってもまとめる</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              FAX・メール添付PDF・写真など、届き方が違ってもOK。必要な項目をスプシ/CSVに整理します。
+            </p>
+          </div>
+          
+          <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200 hover:shadow-md transition">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-main text-2xl mb-6 border border-gray-200">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">勝手に確定しない運用</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              いきなり全部を自動で確定しません。人の確認を前提に、安心して運用できる形にします。
+            </p>
+          </div>
+          
+          <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200 hover:shadow-md transition">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-main text-2xl mb-6 border border-gray-200">
+              <i class="fa-solid fa-stopwatch"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">すぐに始められる</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              まずは1社ごとに「運用できる形」に合わせ込み。最短でデモまで進めます。
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-12 max-w-3xl mx-auto bg-white border border-brand-200 p-6 rounded-xl flex items-start gap-4 shadow-sm">
+          <i class="fa-solid fa-circle-info text-brand-main text-xl mt-1"></i>
+          <div>
+            <h4 class="font-bold text-brand-dark mb-1">初期費用でやること（＝“運用化”）</h4>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              注文書の項目合わせ、呼び方の整理、例外の扱い、確認フロー、出力スプシの整形など、<span class="font-bold">現場で回る状態</span>にします。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- DEMO -->
+    <section id="demo" class="py-20 bg-brand-light">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-3">
+            まずは30秒でイメージだけ
+          </h2>
+          <p class="text-gray-600">
+            実際のデモは、御社の注文書に合わせてお見せします。
+          </p>
+        </div>
+        
+        <div class="relative w-full shadow-2xl rounded-2xl">
+          <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-brand-main text-white px-6 py-2 rounded-t-lg font-bold text-base shadow-md w-max z-10">
+            入力は「確認」中心へ
+          </div>
+          
+          <div class="aspect-video rounded-2xl overflow-hidden border-4 border-gray-800 bg-black w-full">
+            <!-- ✅ 動画は現状のまま -->
+            <iframe
+              id="ytDemo"
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/Kj3P3KX6P60?rel=0&modestbranding=1&playsinline=1&mute=1"
+              title="Sync Base Demo"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        
+        <div class="text-center mt-10">
+          <a
+            href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+            target="_blank"
+            data-track="timerex_click"
+            class="inline-flex items-center gap-3 bg-brand-accent hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-lg transition transform hover:-translate-y-1"
+            >
+            <i class="fa-regular fa-calendar-check"></i>
+            無料デモ・相談を予約する
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- PRICE -->
+    <section id="price" class="py-20 bg-white">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-3">料金（まずは実績優先の“入り口”）</h2>
+          <p class="text-gray-600">詳細はデモで、注文量と運用に合わせて最適化します。</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="p-8 border border-gray-200 rounded-2xl bg-gray-50">
+            <p class="text-gray-600 font-bold mb-2">ライト（まずはスモールに）</p>
+            <p class="text-3xl font-black text-gray-900 mb-2">月額 3万円〜</p>
+            <p class="text-sm text-gray-600 mb-6">注文書 → スプシ/CSV まで / 確認運用</p>
+            <ul class="text-left text-sm text-gray-700 space-y-3 pl-4 list-disc">
+              <li>形式違いの注文書をまとめる</li>
+              <li>人の確認前提で運用</li>
+              <li>まずは“入力を減らす”ところから</li>
+            </ul>
+          </div>
+          
+          <div class="p-8 border-4 border-brand-main rounded-2xl bg-white shadow-xl relative">
+            <div class="absolute top-0 right-0 bg-brand-accent text-white text-xs font-bold px-3 py-1 rounded-bl-lg">START HERE</div>
+            <p class="text-brand-main font-bold mb-2">運用化パッケージ（初期）</p>
+            <p class="text-4xl font-black text-gray-900 mb-2">10〜20万円</p>
+            <p class="text-sm text-gray-600 mb-6">標準1週間で“回る状態”まで仕上げます</p>
+            <ul class="text-left text-sm text-gray-800 space-y-3 pl-4 list-disc font-medium">
+              <li>項目合わせ（列・出力形式の整理）</li>
+              <li>呼び方・型番などの初期整理</li>
+              <li>例外（単位違い・書き方の揺れ）対応方針</li>
+              <li>確認フローの型（誰がどこを見るか）</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mt-10 text-center text-sm text-gray-500">
+          ※ 料金は目安です。最初のデモで「何がどこまで減るか」を見てから決められます。
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ -->
+    <section id="faq" class="py-20 bg-gray-50 border-y border-gray-200">
+      <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-3">よくある質問</h2>
+          <p class="text-gray-600">
+            「うちでも使える？」の不安に、先に答えます。
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          <!-- 1 -->
+          <details data-faq="1" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            取引先ごとに注文書の書き方が違うんですが、大丈夫ですか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            はい、対応できます。最初に「必要な項目の取り方」と「出力の形」を合わせて、現場で回る形にしてから始めます。
+          </div>
+          </details>
+          
+          <!-- 2 -->
+          <details data-faq="2" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            手書きが混ざってても大丈夫ですか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            大丈夫です。ただし手書きは読み取りが不安定になりやすいので、<span class="font-bold">確認前提の運用</span>で安全に回します。
+          </div>
+          </details>
+          
+          <!-- 3 -->
+          <details data-faq="3" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            画質が悪いFAXでも読めますか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            まずは注文書1枚で確認します。読みにくい箇所がある場合は、そこだけ<span class="font-bold">「確認」</span>に回す形にできます。
+          </div>
+          </details>
+          
+          <!-- 4 -->
+          <details data-faq="4" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            「読み間違い」が怖いです。責任はどうなりますか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            <span class="font-bold">勝手に確定しない運用</span>にします。最終確定は必ず人が確認する前提で、安心して使える形にします。
+          </div>
+          </details>
+          
+          <!-- 5 -->
+          <details data-faq="5" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            毎日じゃなくて、月末とか忙しい時だけ使えますか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            使えます。繁忙期だけの運用でもOKです（使い方はデモで一緒に決めます）。
+          </div>
+          </details>
+          
+          <!-- 6 -->
+          <details data-faq="6" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            うちの「品名の呼び方」が独特なんですが対応できますか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            対応できます。社内の呼び方や略称は最初に整理して、出力が崩れないように合わせ込みます。
+          </div>
+          </details>
+          
+          <!-- 7 -->
+          <details data-faq="7" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            最初に何を渡せばいいですか？（注文書って見せていいの？）
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            注文書1枚（写真でもOK）で十分です。社名や個人情報は、必要なら伏せた状態でも確認できます。
+          </div>
+          </details>
+          
+          <!-- 8 -->
+          <details data-faq="8" class="group bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <summary class="cursor-pointer select-none flex items-center justify-between gap-4 p-5 md:p-6">
+          <span class="font-bold text-gray-900">
+            スプシが苦手な人でも運用できますか？
+          </span>
+          <svg class="w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08Z" clip-rule="evenodd"/>
+          </svg>
+          </summary>
+          <div class="px-5 md:px-6 pb-6 text-gray-700 leading-relaxed">
+            “見るだけで迷わない形”に整えます。列名や入力ルールも含めて、現場の人が回せる形にします。
+          </div>
+          </details>
+        </div>
+        
+        <div class="mt-10 text-center">
+          <a
+            href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+            target="_blank"
+            class="inline-flex items-center justify-center gap-2 bg-brand-main text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:bg-brand-dark transition"
+            >
+            <i class="fa-regular fa-calendar-check"></i> 無料デモ予約をする
+          </a>
+          <p class="mt-3 text-sm text-gray-500">
+            まずは「1枚だけ」でOKです。御社の注文書で、動くところを見せます。
+          </p>
+        </div>
+      </div>
+    </section>
+
+        
+        <div class="text-center mt-14">
+          <h3 class="text-2xl font-bold mb-4">まずは15分のデモで、現実的に減るか確認してください</h3>
+          <p class="text-gray-300 mb-8">
+            「できる/できない」を先に決めません。注文書1枚で一緒に判断します。
+          </p>
+          
+          <a
+            href="https://timerex.net/s/yoshi.ai.consul_f4bf/280afac6"
+            target="_blank"
+            data-track="timerex_click"
+            class="inline-flex items-center gap-3 bg-brand-accent hover:bg-orange-600 text-white font-bold py-5 px-10 rounded-2xl text-xl shadow-lg transition transform hover:-translate-y-1"
+            >
+            <i class="fa-regular fa-calendar-check"></i>
+            無料デモ・相談を予約する
+          </a>
+          
+          <div class="mt-14 border-t border-gray-800 pt-8 text-sm text-gray-500">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div class="flex items-center gap-2">
+                <img src="assets/logo.png" alt="Sync Base" class="h-8 opacity-60" />
+                <span>Sync Base</span>
+              </div>
+              <div class="text-center md:text-right">
+                <p>代表：久野 | Email: info@sync-base.jp</p>
+                <p class="mt-2">&copy; 2025 Sync Base. All rights reserved.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- JS：Timerexパラメータ引き継ぎ / FAQアコーディオン / 最低限の計測 -->
+    <script>
+      // ---- 計測（GTMなしでもエラーにならない） ----
+      window.dataLayer = window.dataLayer || [];
+      function track(eventName, params) {
+        window.dataLayer.push({ event: eventName, ...(params || {}) });
+      }
+      
+      // ---- TimerexリンクにUTM等を引き継ぐ（既存のロジック） ----
+      (function () {
+          const srcParams = new URLSearchParams(window.location.search);
+          const allowKeys = new Set([
+            "cid", "v",
+            "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"
+          ]);
+          
+          document.querySelectorAll('a[href*="timerex.net/"]').forEach((a) => {
+              try {
+                const destUrl = new URL(a.href);
+                for (const [k, v] of srcParams.entries()) {
+                  if (allowKeys.has(k) && v) destUrl.searchParams.set(k, v);
+                }
+                a.href = destUrl.toString();
+              } catch (e) {}
+          });
+      })();
+      
+      // ---- クリック計測（Timerex / デモ誘導など） ----
+      document.addEventListener("click", (e) => {
+          const el = e.target.closest("[data-track]");
+          if (!el) return;
+          const name = el.getAttribute("data-track");
+          track(name, { path: location.pathname + location.search });
+      });
+      
+      // ---- FAQ：クリックで開閉 + クリック計測 ----
+      document.querySelectorAll(".faq-toggle").forEach((btn) => {
+          btn.addEventListener("click", () => {
+              const id = btn.getAttribute("data-faq");
+              const body = document.getElementById(id);
+              const icon = btn.querySelector("i");
+              const isOpen = !body.classList.contains("hidden");
+              
+              // close others（好みで消してOK）
+              document.querySelectorAll(".faq-body").forEach((x) => x.classList.add("hidden"));
+              document.querySelectorAll(".faq-toggle i").forEach((x) => x.classList.remove("rotate-180"));
+              
+              if (!isOpen) {
+                body.classList.remove("hidden");
+                icon.classList.add("rotate-180");
+                track("faq_open", { id });
+              }
+          });
+      });
+      
+      // ---- スクロール下部到達（LPの“読了感”だけ軽く取る） ----
+      (function () {
+          let fired = false;
+          window.addEventListener("scroll", () => {
+              if (fired) return;
+              const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 120;
+              if (nearBottom) {
+                fired = true;
+                track("lp_scroll_bottom", { path: location.pathname + location.search });
+              }
+          }, { passive: true });
+      })();
+      
+      // ---- 動画セクションが見えたら1回だけ（再生検知ではなく“視認”） ----
+      (function () {
+          const el = document.getElementById("demo");
+          if (!el || !("IntersectionObserver" in window)) return;
+          let fired = false;
+          const io = new IntersectionObserver((entries) => {
+              entries.forEach((ent) => {
+                  if (!fired && ent.isIntersecting) {
+                    fired = true;
+                    track("video_section_view", { path: location.pathname + location.search });
+                    io.disconnect();
+                  }
+              });
+          }, { threshold: 0.4 });
+          io.observe(el);
+      })();
+    </script>
+    
+  </body>
+</html>
