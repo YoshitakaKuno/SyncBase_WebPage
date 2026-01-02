@@ -1,13 +1,4 @@
-const FORM_ENDPOINT =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdZi1mJzA6XaVBI0rptGmgyiewkr2vk9DXU4O--QNRmCUYtSA/formResponse";
-const VIEW_ENDPOINT =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdZi1mJzA6XaVBI0rptGmgyiewkr2vk9DXU4O--QNRmCUYtSA/viewform";
-const REQUEST_HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-  Referer: VIEW_ENDPOINT,
-  Origin: "https://docs.google.com",
-};
+const GAS_ENDPOINT = process.env.GAS_ENDPOINT || "";
 
 const ENTRY_MAP = {
   company: "entry.2076927326",
@@ -55,15 +46,6 @@ function buildGooglePayload(fields) {
   return payload;
 }
 
-async function fetchFormToken() {
-  const response = await fetch(VIEW_ENDPOINT, {
-    headers: REQUEST_HEADERS,
-  });
-  const html = await response.text();
-  const match = html.match(/name="fbzx" value="([^"]+)"/);
-  return match ? match[1] : "";
-}
-
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.statusCode = 405;
@@ -73,6 +55,12 @@ module.exports = async (req, res) => {
   }
 
   try {
+    if (!GAS_ENDPOINT) {
+      res.statusCode = 500;
+      res.end("GAS endpoint is not configured.");
+      return;
+    }
+
     const body = await parseBody(req);
 
     if (body.company_fax) {
@@ -89,21 +77,13 @@ module.exports = async (req, res) => {
     }
 
     const payload = buildGooglePayload(body);
-    const fbzx = await fetchFormToken();
-    payload.append("fvv", "1");
-    payload.append("fbzx", fbzx);
-    payload.append("pageHistory", "0");
-    payload.append("submissionTimestamp", "-1");
-    payload.append("partialResponse", `[null,null,"${fbzx}"]`);
 
-    const response = await fetch(FORM_ENDPOINT, {
+    const response = await fetch(GAS_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        ...REQUEST_HEADERS,
       },
       body: payload.toString(),
-      redirect: "manual",
     });
 
     if (response.status >= 400) {
