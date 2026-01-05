@@ -41,6 +41,10 @@ a {
   margin: 0 auto;
 }
 
+.container.wide {
+  width: min(1400px, 96%);
+}
+
 .narrow {
   width: min(760px, 90%);
 }
@@ -382,22 +386,25 @@ a {
   align-items: center;
 }
 
-.video-block {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-  align-items: center;
+.video-section {
+  padding-top: 72px;
+}
+
+.video-head {
+  max-width: 720px;
+  margin-bottom: 20px;
 }
 
 .video-embed {
   border: 1px solid var(--line);
   background: var(--paper);
-  padding: 12px;
+  padding: 8px;
 }
 
 .video-embed iframe {
   width: 100%;
   aspect-ratio: 16 / 9;
+  display: block;
 }
 
 .faq-list {
